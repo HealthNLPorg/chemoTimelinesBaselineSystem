@@ -121,7 +121,7 @@ class TimelineAnnotator(cas_annotator.CasAnnotator):
             event
             for event in cas.select(cas.typesystem.get_type(ctakes_types.EventMention))
             if CHEMO_TUI
-            in TimelineAnnotator._get_tuis(
+               in TimelineAnnotator._get_tuis(
                 event
             )  # as of 1/10/24, using T061 which is ProcedureMention
         ]
@@ -186,14 +186,15 @@ class TimelineAnnotator(cas_annotator.CasAnnotator):
             )
 
     def _write_actual_proc_mentions(
-        self, cas: Cas, positive_chemo_mentions: List[FeatureStructure]
+            self, cas: Cas, positive_chemo_mentions: List[FeatureStructure]
     ):
         timex_type = cas.typesystem.get_type(ctakes_types.TimeMention)
         cas_source_data = cas.select(ctakes_types.Metadata)[0].sourceData
         document_creation_time = cas_source_data.sourceOriginalDate
-        relevant_timexes = TimelineAnnotator._timexes_with_normalization(
-            cas.select(timex_type)
-        )
+        # relevant_timexes = TimelineAnnotator._timexes_with_normalization(
+        #     cas.select(timex_type)
+        # )
+        relevant_timexes = cas.select(timex_type)
 
         base_tokens, token_map = TimelineAnnotator._tokens_and_map(cas, mode="dtr")
         begin2token, end2token = TimelineAnnotator._invert_map(token_map)
@@ -241,15 +242,15 @@ class TimelineAnnotator(cas_annotator.CasAnnotator):
             )
         }
         if (
-            len(list(relevant_timexes)) == 0
-            or len(
-                list(
-                    chain.from_iterable(
-                        map(local_window_mentions, positive_chemo_mentions)
-                    )
+                len(list(relevant_timexes)) == 0
+                or len(
+            list(
+                chain.from_iterable(
+                    map(local_window_mentions, positive_chemo_mentions)
                 )
             )
-            == 0
+        )
+                == 0
         ):
             print(
                 f"WARNING: Timexes suitable for TLINK pairing discovered in {patient_id} file {note_name}"
@@ -264,7 +265,7 @@ class TimelineAnnotator(cas_annotator.CasAnnotator):
             for timex, tlink_inst_pair in tlink_dict.items():
                 tlink, tlink_inst = tlink_inst_pair
                 chemo_text = TimelineAnnotator._normalize_mention(chemo)
-                timex_text = timex.time.normalizedForm
+                timex_text = "NO_NORMALIZATION_RIGHT_NOW" # timex.time.normalizedForm
                 if self.use_dtr:
                     instance = [
                         document_creation_time,
@@ -305,7 +306,7 @@ class TimelineAnnotator(cas_annotator.CasAnnotator):
 
     @staticmethod
     def _empty_discovery(
-        DCT: str, patient_id: str, note_name: str, use_dtr: bool
+            DCT: str, patient_id: str, note_name: str, use_dtr: bool
     ) -> List[str]:
         if use_dtr:
             return [
@@ -342,7 +343,7 @@ class TimelineAnnotator(cas_annotator.CasAnnotator):
 
     @staticmethod
     def _tokens_and_map(
-        cas: Cas, context: Optional[FeatureStructure] = None, mode="conmod"
+            cas: Cas, context: Optional[FeatureStructure] = None, mode="conmod"
     ) -> Tuple[List[str], List[Tuple[int, int]]]:
         base_tokens = []
         token_map = []
@@ -380,7 +381,7 @@ class TimelineAnnotator(cas_annotator.CasAnnotator):
 
     @staticmethod
     def _invert_map(
-        token_map: List[Tuple[int, int]]
+            token_map: List[Tuple[int, int]]
     ) -> Tuple[Dict[int, int], Dict[int, int]]:
         begin_map: Dict[int, int] = {}
         end_map: Dict[int, int] = {}
@@ -420,18 +421,18 @@ class TimelineAnnotator(cas_annotator.CasAnnotator):
         event_begin = begin2token[event.begin]
         event_end = end2token[event.end] + 1
         str_builder = (
-            tokens[:event_begin]
-            + ["<e>"]
-            + tokens[event_begin:event_end]
-            + ["</e>"]
-            + tokens[event_end:]
+                tokens[:event_begin]
+                + ["<e>"]
+                + tokens[event_begin:event_end]
+                + ["</e>"]
+                + tokens[event_end:]
         )
         result = " ".join(str_builder)
         return result
 
     @staticmethod
     def _timexes_with_normalization(
-        timexes: List[FeatureStructure],
+            timexes: List[FeatureStructure],
     ) -> List[FeatureStructure]:
         def relevant(timex):
             return hasattr(timex, "time") and hasattr(timex.time, "normalizedForm")
@@ -440,11 +441,11 @@ class TimelineAnnotator(cas_annotator.CasAnnotator):
 
     @staticmethod
     def _get_tlink_instance(
-        event: FeatureStructure,
-        timex: FeatureStructure,
-        tokens: List[str],
-        begin2token: Dict[int, int],
-        end2token: Dict[int, int],
+            event: FeatureStructure,
+            timex: FeatureStructure,
+            tokens: List[str],
+            begin2token: Dict[int, int],
+            end2token: Dict[int, int],
     ) -> str:
         # Have an event and a timex/other event which are up to 60 tokens apart from each other
         # have two tokens before first annotation, first annotation plus tags
@@ -480,49 +481,49 @@ class TimelineAnnotator(cas_annotator.CasAnnotator):
 
         str_builder = (
             # first two tokens
-            tokens[start_token_idx:first_begin]
-            # tag body of the first mention
-            + [first_open_tag]
-            + tokens[first_begin:first_end]
-            + [first_close_tag]
-            # intermediate part of the window
-            + tokens[first_end:second_begin]
-            # tag body of the second mention
-            + [second_open_tag]
-            + tokens[second_begin:second_end]
-            + [second_close_tag]
-            # ending part of the window
-            + tokens[second_end:end_token_idx]
+                tokens[start_token_idx:first_begin]
+                # tag body of the first mention
+                + [first_open_tag]
+                + tokens[first_begin:first_end]
+                + [first_close_tag]
+                # intermediate part of the window
+                + tokens[first_end:second_begin]
+                # tag body of the second mention
+                + [second_open_tag]
+                + tokens[second_begin:second_end]
+                + [second_close_tag]
+                # ending part of the window
+                + tokens[second_end:end_token_idx]
         )
         result = " ".join(str_builder)
         return result
 
     @staticmethod
     def _get_dtr_instance(
-        event: FeatureStructure,
-        tokens: List[str],
-        begin2token: Dict[int, int],
-        end2token: Dict[int, int],
+            event: FeatureStructure,
+            tokens: List[str],
+            begin2token: Dict[int, int],
+            end2token: Dict[int, int],
     ) -> str:
         event_begin = begin2token[event.begin]
         event_end = end2token[event.end] + 1
         str_builder = (
-            tokens[event_begin - DTR_WINDOW_RADIUS : event_begin]
-            + ["<e>"]
-            + tokens[event_begin:event_end]
-            + ["</e>"]
-            + tokens[event_end : event_end + DTR_WINDOW_RADIUS]
+                tokens[event_begin - DTR_WINDOW_RADIUS : event_begin]
+                + ["<e>"]
+                + tokens[event_begin:event_end]
+                + ["</e>"]
+                + tokens[event_end : event_end + DTR_WINDOW_RADIUS]
         )
         result = " ".join(str_builder)
         return result
 
     @staticmethod
     def _get_tlink_window_mentions(
-        event: FeatureStructure,
-        relevant_mentions: List[FeatureStructure],
-        begin2token: Dict[int, int],
-        end2token: Dict[int, int],
-        token2char: List[Tuple[int, int]],
+            event: FeatureStructure,
+            relevant_mentions: List[FeatureStructure],
+            begin2token: Dict[int, int],
+            end2token: Dict[int, int],
+            token2char: List[Tuple[int, int]],
     ) -> Generator[FeatureStructure, None, None]:
         event_begin_token_index = begin2token[event.begin]
         event_end_token_index = end2token[event.end]
@@ -546,7 +547,7 @@ class TimelineAnnotator(cas_annotator.CasAnnotator):
 
     @staticmethod
     def _deleted_neighborhood(
-        central_mention: FeatureStructure, mentions: List[FeatureStructure]
+            central_mention: FeatureStructure, mentions: List[FeatureStructure]
     ) -> Generator[FeatureStructure, None, None]:
         for mention in mentions:
             if central_mention != mention:

@@ -26,6 +26,16 @@
     </dependency>
 
     <dependency>
+      <groupId>org.apache.ctakes</groupId>
+      <artifactId>ctakes-examples</artifactId>
+      <version>${ctakes.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.ctakes</groupId>
+      <artifactId>ctakes-user-resources</artifactId>
+      <version>${ctakes.version}</version>
+    </dependency>
+    <dependency>
       <groupId>com.google.guava</groupId>
       <artifactId>guava</artifactId>
       <version>33.0.0-jre</version>
@@ -65,11 +75,11 @@
       <version>${ctakes.version}</version>
 
     </dependency>
-    <dependency>
-      <groupId>org.healthnlp</groupId>
-      <artifactId>tweaked-timenorm</artifactId>
-      <version>${project.parent.version}</version>
-    </dependency>
+    <!--    <dependency>-->
+    <!--      <groupId>org.healthnlp</groupId>-->
+    <!--      <artifactId>tweaked-timenorm</artifactId>-->
+    <!--      <version>${project.parent.version}</version>-->
+    <!--    </dependency>-->
   </dependencies>
 
   <build>

@@ -12,14 +12,14 @@
   <properties>
     <!--The Scala version is not the latest on purpose I'm afraid-->
     <!-- <scala.version>2.12.8</scala.version> -->
-    <scala.version>2.13.0</scala.version>
+    <scala.version>2.12.8</scala.version>
     <maven.compiler.source>17</maven.compiler.source>
     <maven.compiler.target>17</maven.compiler.target>
     <ctakes.version>7.0.0-SNAPSHOT</ctakes.version>
     <skip.assembly>true</skip.assembly>
   </properties>
   <modules>
-    <module>tweaked-timenorm</module>
+    <!-- <module>tweaked-timenorm</module> -->
     <module>instance-generator</module>
   </modules>
   <dependencies>
@@ -116,7 +116,7 @@
               </resources>
               <outputDirectory>${project.basedir}/resources</outputDirectory>
             </configuration>
-	        </execution>
+          </execution>
         </executions>
       </plugin>
       <plugin>
