@@ -5,7 +5,8 @@ import org.apache.ctakes.core.pipeline.PipeBitInfo;
 import org.apache.ctakes.core.util.doc.SourceMetadataUtil;
 import org.apache.ctakes.typesystem.type.structured.DocumentPath;
 import org.apache.ctakes.typesystem.type.structured.SourceData;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.apache.uima.UimaContext;
 import org.apache.uima.analysis_engine.AnalysisEngineProcessException;
 import org.apache.uima.fit.util.JCasUtil;
@@ -21,7 +22,7 @@ import java.util.Optional;
 )
 
 public class DCTAnnotator extends org.apache.uima.fit.component.JCasAnnotator_ImplBase {
-    final static private Logger LOGGER = Logger.getLogger( "DCTAnnotator" );
+    final static private Logger LOGGER = LoggerFactory.getLogger( "DCTAnnotator" );
     final static private DocTimeApproximator _approximator = new DocTimeApproximator();
     @Override
     public void initialize( UimaContext context ) throws ResourceInitializationException {
@@ -41,7 +42,7 @@ public class DCTAnnotator extends org.apache.uima.fit.component.JCasAnnotator_Im
         if ( fileNameElements.length >= 3 ){
 
             String[] possibleDate =
-                fileNameElements[2].split("-");
+                    fileNameElements[2].split("-");
 
             if ( possibleDate.length == 3 ){
 
