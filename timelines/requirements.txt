@@ -1,4 +1,5 @@
 transformers[torch]
+datasets
 pandas>=2.0.0
 tomli
 setuptools
