@@ -19,7 +19,6 @@
     <skip.assembly>true</skip.assembly>
   </properties>
   <modules>
-    <!-- <module>tweaked-timenorm</module> -->
     <module>instance-generator</module>
   </modules>
   <dependencies>
