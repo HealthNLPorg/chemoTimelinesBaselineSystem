@@ -1,4 +1,0 @@
-Start from
-Start since
-End to
-End until

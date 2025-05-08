@@ -208,7 +208,7 @@ class TimelineAnnotator(cas_annotator.CasAnnotator):
 
     @staticmethod
     def _tokens_and_map(
-        cas: Cas, context: Optional[FeatureStructure] = None, mode="conmod"
+            cas: Cas, context: Optional[FeatureStructure] = None, mode="conmod"
     ) -> Tuple[List[str], List[Tuple[int, int]]]:
         base_tokens = []
         token_map = []
@@ -262,7 +262,7 @@ class TimelineAnnotator(cas_annotator.CasAnnotator):
 
     @staticmethod
     def _invert_map(
-        token_map: List[Tuple[int, int]]
+            token_map: List[Tuple[int, int]]
     ) -> Tuple[Dict[int, int], Dict[int, int]]:
         begin_map: Dict[int, int] = {}
         end_map: Dict[int, int] = {}
@@ -325,7 +325,7 @@ class TimelineAnnotator(cas_annotator.CasAnnotator):
 
     @staticmethod
     def _timexes_with_normalization(
-        timexes: List[FeatureStructure],
+            timexes: List[FeatureStructure],
     ) -> List[FeatureStructure]:
         def relevant(timex):
             return hasattr(timex, "time") and hasattr(timex.time, "normalizedForm")
@@ -334,11 +334,11 @@ class TimelineAnnotator(cas_annotator.CasAnnotator):
 
     @staticmethod
     def _get_tlink_instance(
-        event: FeatureStructure,
-        timex: FeatureStructure,
-        tokens: List[str],
-        begin2token: Dict[int, int],
-        end2token: Dict[int, int],
+            event: FeatureStructure,
+            timex: FeatureStructure,
+            tokens: List[str],
+            begin2token: Dict[int, int],
+            end2token: Dict[int, int],
     ) -> str:
         # Have an event and a timex/other event which are up to 60 tokens apart from each other
         # have two tokens before first annotation, first annotation plus tags
@@ -374,19 +374,19 @@ class TimelineAnnotator(cas_annotator.CasAnnotator):
 
         str_builder = (
             # first two tokens
-            tokens[start_token_idx:first_begin]
-            # tag body of the first mention
-            + [first_open_tag]
-            + tokens[first_begin:first_end]
-            + [first_close_tag]
-            # intermediate part of the window
-            + tokens[first_end:second_begin]
-            # tag body of the second mention
-            + [second_open_tag]
-            + tokens[second_begin:second_end]
-            + [second_close_tag]
-            # ending part of the window
-            + tokens[second_end:end_token_idx]
+                tokens[start_token_idx:first_begin]
+                # tag body of the first mention
+                + [first_open_tag]
+                + tokens[first_begin:first_end]
+                + [first_close_tag]
+                # intermediate part of the window
+                + tokens[first_end:second_begin]
+                # tag body of the second mention
+                + [second_open_tag]
+                + tokens[second_begin:second_end]
+                + [second_close_tag]
+                # ending part of the window
+                + tokens[second_end:end_token_idx]
         )
         result = " ".join(str_builder)
         return result

@@ -30,6 +30,6 @@ add TokenizerAnnotatorPTB
 
 add BackwardsTimeAnnotator classifierJarPath=/org/apache/ctakes/temporal/models/timeannotator/model.jar
 add DCTAnnotator
-add TimeMentionNormalizer timeout=10
+// add TimeMentionNormalizer timeout=10
 
 add PbjJmsSender SendQueue=JavaToPy SendStop=yes
